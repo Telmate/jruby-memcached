@@ -47,12 +47,12 @@ describe Memcached::Rails do
     context "exist?" do
       it "should return true if key exists" do
         @memcached.set "key", "value"
-        @memcached.exist?("key").should be_true
+        @memcached.exist?("key").should be_truthy
       end
 
       it "should return false if key is missing" do
         @memcached.delete "key" rescue nil
-        @memcached.exist?("key").should be_false
+        @memcached.exist?("key").should be_falsey
       end
     end
 
@@ -76,14 +76,14 @@ describe Memcached::Rails do
 
     context "set" do
       it "should set successfully" do
-        @memcached.set("key", "value").should be_true
+        @memcached.set("key", "value").should be_truthy
         @memcached.get("key").should == "value"
       end
     end
 
     context "write" do
       it "should write successfully" do
-        @memcached.write("key", "value").should be_true
+        @memcached.write("key", "value").should be_truthy
         @memcached.read("key").should == "value"
       end
 
@@ -110,12 +110,12 @@ describe Memcached::Rails do
     context "add" do
       it "should add if key is missing" do
         @memcached.delete "key" rescue nil
-        @memcached.add("key", "value").should be_true
+        @memcached.add("key", "value").should be_truthy
       end
 
       it "should do nothing if key exists" do
         @memcached.set "key", "value"
-        @memcached.add("key", "value").should be_false
+        @memcached.add("key", "value").should be_falsey
       end
 
       context "with string_return_types" do

@@ -227,7 +227,7 @@ public class Memcached extends RubyObject {
         int retry = 0;
         while (true) {
             try {
-                if (keys instanceof RubyString) {
+                if (!(keys instanceof RubyArray)) {
                     Object ret = client.get(getFullKey(keys.toString()), transcoder);
                     if (ret == null) {
                         throw Error.newNotFound(ruby, "not found");
@@ -239,7 +239,7 @@ public class Memcached extends RubyObject {
                         value = ruby.newFixnum((Long) ret);
                     }
                     return value;
-                } else if (keys instanceof RubyArray) {
+                } else {
                     RubyHash results = RubyHash.newHash(ruby);
 
                     Map<String, IRubyObject> bulkResults = (Map<String, IRubyObject>) client.getBulk(getFullKeys(keys.convertToArray()), transcoder);

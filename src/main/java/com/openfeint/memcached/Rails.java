@@ -212,15 +212,24 @@ public class Rails extends Memcached {
             } else if (args[index] instanceof RubyHash) {
                 RubyHash options = (RubyHash) args[index];
                 if (options.containsKey(ruby.newSymbol("ttl"))) {
-                    Long ttl = (Long) options.get(ruby.newSymbol("ttl"));
+                	Long ttl = getLongValue(context, options.get(ruby.newSymbol("ttl")));
                     return ruby.newFixnum(ttl);
                 } else if (options.containsKey(ruby.newSymbol("expires_in"))) {
-                    Long expiresIn = (Long) options.get(ruby.newSymbol("expires_in"));
+                	Long expiresIn = getLongValue(context, options.get(ruby.newSymbol("expires_in")));
                     return ruby.newFixnum(expiresIn);
                 }
             }
         }
         return ruby.newFixnum(super.getDefaultTTL());
+    }
+
+    private Long getLongValue(ThreadContext context, Object valObj) {
+    	if (valObj instanceof Long) {
+    		return (Long) valObj;
+    	} else if (valObj instanceof IRubyObject) {
+    		return ((IRubyObject)valObj).callMethod(context, "to_i").convertToInteger().getLongValue();
+    	}
+    	return null;
     }
 
     private RubyBoolean notRaw(ThreadContext context, IRubyObject[] args, int index) {
