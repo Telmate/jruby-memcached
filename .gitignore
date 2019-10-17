@@ -29,3 +29,5 @@ target/original-xmemcached-ext-0.0.1.jar
 out/
 spymemcached-ext.iml
 src/main/Main.iml
+/target/
+.DS_Store

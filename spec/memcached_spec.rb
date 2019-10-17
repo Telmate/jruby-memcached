@@ -77,7 +77,7 @@ describe Memcached do
       it "should set expiry" do
         @memcached.set "key", "value", 1
         @memcached.get("key").should == "value"
-        sleep 1
+        sleep 1.1
         expect { @memcached.get("key") }.to raise_error(Memcached::NotFound)
       end
     end

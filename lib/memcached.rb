@@ -10,3 +10,20 @@ class Memcached::Rails
     @logger = logger
   end
 end
+
+class Memcached::RailsPooled
+  def initialize(options = {})
+    @pool_size = options.delete(:pool).to_i
+    @pool_size = 1 if @pool_size < 1
+    @pool_clients  = []
+    @pool_size.times { @pool_clients << Memcached::Rails.new(options) }
+  end
+
+  def __get_client__
+    @pool_clients[Thread.current.object_id % @pool_size]
+  end
+
+  def method_missing(m, *args, &block)
+    __get_client__.__send__(m, *args, &block)
+  end
+end
